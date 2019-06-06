@@ -43,7 +43,7 @@ export default class Menu extends Component {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => this.props.navigation.navigate("CalendarClass")}
+          onPress={() => this.props.navigation.navigate("Agenda")}
         >
           <Image
             style={{

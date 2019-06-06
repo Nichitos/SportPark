@@ -8,7 +8,7 @@ import {
   Dimensions,
   Image
 } from "react-native";
-import { Pedometer, Notifications, Permissions, Constants } from "expo";
+import { Pedometer, Permissions, Constants } from "expo";
 import { AsyncStorage } from "react-native";
 import { Font } from "expo";
 import { Button } from "react-native-material-ui";
@@ -42,8 +42,6 @@ export default class Activity extends Component {
       console.log("Notification permissions granted.");
     }
 
-    Notifications.addListener(this.handleNotification);
-
     let getKeys = ["height", "selectedItem", "age", "weight"];
     await AsyncStorage.multiGet(getKeys).then(result =>
       this.setState({
@@ -62,7 +60,6 @@ export default class Activity extends Component {
     this._retrieveCoffee();
     this._retrieveCalories();
     this.setState({ fontLoaded: true });
-    this.onSubmit();
     this._subscribe();
     this.prepareDb();
   }
@@ -99,34 +96,6 @@ export default class Activity extends Component {
     console.log("ok! got your notif");
   }
 
-  onSubmit() {
-    const localNotification = {
-      title: "Pedometru",
-      body: "Ați mers azi " + this.state.pastStepCount + " pași "
-    };
-
-    let currentTime = new Date();
-
-    let neededTime = new Date();
-    neededTime.setHours(21);
-    neededTime.setMinutes(0);
-    neededTime.setSeconds(0);
-
-    console.log("neededtime " + neededTime);
-
-    let final = neededTime - currentTime;
-
-    const schedulingOptions = {
-      //repeat: "day",
-      time: new Date().getTime() + Number(final)
-    };
-
-    Notifications.scheduleLocalNotificationAsync(
-      localNotification,
-      schedulingOptions
-    );
-  }
-
   bmr = (bmrRounded = "NaN") => {
     if (this.state.getSelectedItem === "0") {
       const bmr =
@@ -134,7 +103,7 @@ export default class Activity extends Component {
         13.75 * this.state.getWeight +
         5.003 * this.state.getHeight -
         6.755 * this.state.getAge;
-      bmrRounded = bmr.toFixed(0);
+      bmrRounded = "/ 2800";
     } else if (this.state.getSelectedItem == null) {
       bmrRounded = "/ 2800";
     } else {

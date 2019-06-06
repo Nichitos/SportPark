@@ -8,6 +8,7 @@ import {
   FlatList
 } from "react-native";
 import { SQLite } from "expo";
+import { Button } from "react-native-material-ui";
 
 import { Card } from "react-native-elements";
 import { Font } from "expo";
@@ -49,6 +50,18 @@ export default class StatisticCalories extends Component {
     });
     this.setState({ fontLoaded: true });
     this._retrieveCalories();
+  }
+
+  clearStatistic() {
+    db.transaction(
+      tx => {
+        tx.executeSql("DROP TABLE caloriesTable;");
+      },
+      null,
+      function() {
+        console.log("done?.");
+      }
+    );
   }
 
   getUnique(arr, comp) {

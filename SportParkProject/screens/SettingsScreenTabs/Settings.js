@@ -4,12 +4,20 @@ import {
   AsyncStorage,
   Keyboard,
   TouchableWithoutFeedback,
-  Alert
+  Alert,
+  Text
 } from "react-native";
 import { TextField } from "react-native-material-textfield";
 import { Font } from "expo";
 import { Button } from "react-native-material-ui";
 import SwitchSelector from "react-native-switch-selector";
+import Dialog, {
+  DialogFooter,
+  DialogButton,
+  DialogContent
+} from "react-native-popup-dialog";
+import { SQLite } from "expo";
+const db = SQLite.openDatabase("SportParkDatabase");
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -36,6 +44,7 @@ export default class Settings extends Component {
     height: "",
     weight: "",
     selectedItem: "0",
+    visible: false,
     fontLoaded: false
   };
 
@@ -81,7 +90,25 @@ export default class Settings extends Component {
     );
   };
 
-  handleSubmit = async () => {
+  clearStatistics() {
+    db.transaction(
+      tx => {
+        tx.executeSql("DROP TABLE stepsTable;");
+        tx.executeSql("DROP TABLE coffeeTable;");
+        tx.executeSql("DROP TABLE caloriesTable;");
+        tx.executeSql("DROP TABLE waterTable;");
+      },
+      null,
+      function() {}
+    );
+    this.setState({ visible: false });
+  }
+
+  openPopup() {
+    this.setState({ visible: true });
+  }
+
+  handleSubmit = () => {
     if (
       this.state.age === null ||
       this.state.weight === null ||
@@ -89,20 +116,20 @@ export default class Settings extends Component {
     ) {
       this.showErrorAlert();
     } else {
-      await AsyncStorage.multiSet([
+      AsyncStorage.multiSet([
         ["age", this.state.age],
         ["height", this.state.height],
         ["weight", this.state.weight],
         ["selectedItem", this.state.selectedItem]
       ]);
-      //this.showSuccessAlert();
+      this.showSuccessAlert();
       Keyboard.dismiss();
     }
   };
 
-  handleRemove = async () => {
+  handleRemove = () => {
     let removeKeys = ["age", "weight", "height"];
-    await AsyncStorage.multiRemove(removeKeys);
+    AsyncStorage.multiRemove(removeKeys);
     this.setState({
       age: "",
       weight: "",
@@ -121,6 +148,41 @@ export default class Settings extends Component {
             alignItems: "stretch"
           }}
         >
+          <Dialog
+            visible={this.state.visible}
+            onTouchOutside={() => this.setState({ visible: false })}
+            width={300}
+            height={150}
+            footer={
+              <DialogFooter>
+                <DialogButton
+                  text="anulează"
+                  onPress={() => this.setState({ visible: false })}
+                />
+                <DialogButton
+                  text="da"
+                  onPress={() => {
+                    this.clearStatistics();
+                  }}
+                />
+              </DialogFooter>
+            }
+          >
+            <DialogContent>
+              {this.state.fontLoaded ? (
+                <Text
+                  style={{
+                    marginTop: 10,
+                    fontSize: 16,
+                    fontFamily: "open_sans_bold"
+                  }}
+                >
+                  Sunteți sigur(ă) că doriți să ștergeți toate datele despre
+                  pași, apă, cafea și calorii ?
+                </Text>
+              ) : null}
+            </DialogContent>
+          </Dialog>
           <View style={{ padding: 10 }}>
             <TextField
               label="vârsta"
@@ -201,7 +263,7 @@ export default class Settings extends Component {
                 upperCase={true}
                 text="salvează"
                 labelTextStyle={{ fontFamily: "century_gothic" }}
-                onPress={this.handleSubmit}
+                onPress={() => this.handleSubmit()}
               />
             </View>
             <View style={{ flex: 1, marginLeft: 10 }}>
@@ -211,9 +273,19 @@ export default class Settings extends Component {
                 upperCase={true}
                 text="resetează"
                 labelTextStyle={{ fontFamily: "century_gothic" }}
-                onPress={this.handleRemove}
+                onPress={() => this.handleRemove()}
               />
             </View>
+          </View>
+          <View style={{ flex: 1, margin: 10 }}>
+            <Button
+              raised
+              accent
+              upperCase={true}
+              text="șterge statistica"
+              labelTextStyle={{ fontFamily: "century_gothic" }}
+              onPress={() => this.openPopup()}
+            />
           </View>
         </View>
       </DismissKeyboard>

@@ -30,8 +30,8 @@ HomeStack.navigationOptions = {
       tintColor="#FFFF"
       name={
         Platform.OS === "ios"
-          ? `ios-information-circle-outline${focused ? "" : "-outline"}`
-          : "md-information-circle-outline"
+          ? "ios-information-circle-outline"
+          : "ios-information-circle-outline"
       }
     />
   )

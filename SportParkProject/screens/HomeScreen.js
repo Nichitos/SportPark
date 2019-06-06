@@ -998,7 +998,8 @@ const styles = StyleSheet.create({
   cardImage2: {
     flex: 1,
     width: 350,
-    height: 202,
+
+    height: Platform.OS === "ios" ? 200 : 100,
     borderWidth: 100,
     resizeMode: "cover"
   },

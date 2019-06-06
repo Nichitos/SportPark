@@ -17,7 +17,11 @@ export default class DatePersonale extends Component {
   };
 
   state = {
-    fontLoaded: false
+    fontLoaded: false,
+    getAge: "",
+    getHeight: "",
+    getSelectedItem: "",
+    getWeight: ""
   };
 
   constructor() {
@@ -46,36 +50,48 @@ export default class DatePersonale extends Component {
   idealWeight = (idealWeightRounded = "NaN") => {
     const heightInch = this.state.getHeight / 2.54; //height converted to inch
 
-    if (this.state.getSelectedItem === "0") {
-      const idealWeight = 50 + 2.3 * (heightInch - 60); //ideal weight calculator for male: Robinson calculator
-      idealWeightRounded = idealWeight.toFixed(1); //ideal weight for male rounded
-    } else if (this.state.getSelectedItem == null) {
-      idealWeightRounded = "NaN";
+    if (this.state.getHeight === null) {
+      idealWeightRounded = "Lipsă date";
     } else {
-      const idealWeight = 45.5 + 2.3 * (heightInch - 60); //ideal weight calculator for female: Robinson calculator
-      idealWeightRounded = idealWeight.toFixed(1); //ideal weight for female rounded
+      if (this.state.getSelectedItem === "0") {
+        const idealWeight = 50 + 2.3 * (heightInch - 60); //ideal weight calculator for male: Robinson calculator
+        idealWeightRounded = idealWeight.toFixed(1); //ideal weight for male rounded
+      } else if (this.state.getSelectedItem == null) {
+        idealWeightRounded = "Lipsă date";
+      } else {
+        const idealWeight = 45.5 + 2.3 * (heightInch - 60); //ideal weight calculator for female: Robinson calculator
+        idealWeightRounded = idealWeight.toFixed(1); //ideal weight for female rounded
+      }
     }
 
     return idealWeightRounded;
   };
 
   bmr = (bmrRounded = "NaN") => {
-    if (this.state.getSelectedItem === "0") {
-      const bmr =
-        66.47 +
-        13.75 * this.state.getWeight +
-        5.003 * this.state.getHeight -
-        6.755 * this.state.getAge;
-      bmrRounded = bmr.toFixed(0);
-    } else if (this.state.getSelectedItem == null) {
-      bmrRounded = "2800";
+    if (
+      this.state.getHeight === null ||
+      this.state.getWeight === null ||
+      this.state.getAge === null
+    ) {
+      bmrRounded = "Lipsă date";
     } else {
-      const bmr =
-        655.1 +
-        9.563 * this.state.getWeight +
-        1.85 * this.state.getHeight -
-        4.676 * this.state.getAge;
-      bmrRounded = bmr.toFixed(0);
+      if (this.state.getSelectedItem === "0") {
+        const bmr =
+          66.47 +
+          13.75 * this.state.getWeight +
+          5.003 * this.state.getHeight -
+          6.755 * this.state.getAge;
+        bmrRounded = bmr.toFixed(0);
+      } else if (this.state.getSelectedItem == null) {
+        bmrRounded = "2800";
+      } else {
+        const bmr =
+          655.1 +
+          9.563 * this.state.getWeight +
+          1.85 * this.state.getHeight -
+          4.676 * this.state.getAge;
+        bmrRounded = bmr.toFixed(0);
+      }
     }
 
     return bmrRounded;
@@ -83,7 +99,7 @@ export default class DatePersonale extends Component {
 
   showAge = () => {
     if (this.state.getAge === null) {
-      return <Text>NaN</Text>;
+      return <Text>Lipsă date</Text>;
     } else {
       return <Text>{this.state.getAge} ani</Text>;
     }
@@ -91,7 +107,7 @@ export default class DatePersonale extends Component {
 
   showWeight = () => {
     if (this.state.getWeight === null) {
-      return <Text>NaN</Text>;
+      return <Text>Lipsă date</Text>;
     } else {
       return <Text>{this.state.getWeight} kg</Text>;
     }
@@ -99,7 +115,7 @@ export default class DatePersonale extends Component {
 
   showHeight = () => {
     if (this.state.getHeight === null) {
-      return <Text>NaN</Text>;
+      return <Text>Lipsă date</Text>;
     } else {
       return <Text>{this.state.getHeight} cm</Text>;
     }

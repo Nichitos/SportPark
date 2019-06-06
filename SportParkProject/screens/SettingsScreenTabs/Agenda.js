@@ -1,15 +1,23 @@
 import React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  AsyncStorage
+} from "react-native";
 import { Agenda } from "react-native-calendars";
-import Dialog, {
-  DialogFooter,
-  DialogButton,
-  DialogContent
-} from "react-native-popup-dialog";
 
 import { Button } from "react-native-material-ui";
-
 import { Font } from "expo";
+
+const DismissKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
 
 export default class CalendarClass extends React.Component {
   static navigationOptions = {
@@ -25,11 +33,25 @@ export default class CalendarClass extends React.Component {
     headerTintColor: "#fff"
   };
 
+  showScaleAnimationDialog = () => {
+    this.scaleAnimationDialog.show();
+  };
+
   state = {
     fontLoaded: false,
     visible: false,
+    id: "",
+    name: "",
+    surname: "",
+    time: new Date().getHours(),
+    date:
+      new Date().getDate() +
+      "/" +
+      new Date().getMonth() +
+      "/" +
+      new Date().getFullYear(),
     items: {
-      "2019-04-01": [
+      "2019-06-01": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -106,7 +128,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-02": [
+      "2019-06-02": [
         {
           time: "09:00",
           nume: "Aqua Fit",
@@ -125,7 +147,8 @@ export default class CalendarClass extends React.Component {
 
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -164,7 +187,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -187,7 +211,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-04-03": [
+      "2019-06-03": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -269,10 +293,11 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-04-04": [
+      "2019-06-04": [
         {
           time: "09:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "09:00",
@@ -331,7 +356,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -349,7 +375,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-05": [
+      "2019-06-05": [
         {
           time: "09:00",
           nume: "Pilates Power",
@@ -426,7 +452,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-04-06": [
+      "2019-06-06": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -463,7 +489,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-04-07": [
+      "2019-06-07": [
         {
           time: "10:00",
           nume: "Burn Up",
@@ -471,7 +497,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -489,7 +516,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-08": [
+      "2019-06-08": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -566,7 +593,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-09": [
+      "2019-06-09": [
         {
           time: "09:00",
           nume: "Aqua Fit",
@@ -585,7 +612,8 @@ export default class CalendarClass extends React.Component {
 
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -624,7 +652,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -647,7 +676,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-04-10": [
+      "2019-06-10": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -729,10 +758,11 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-04-11": [
+      "2019-06-11": [
         {
           time: "09:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "09:00",
@@ -791,7 +821,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -809,7 +840,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-12": [
+      "2019-06-12": [
         {
           time: "09:00",
           nume: "Pilates Power",
@@ -886,7 +917,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-04-13": [
+      "2019-06-13": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -923,7 +954,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-04-14": [
+      "2019-06-14": [
         {
           time: "10:00",
           nume: "Burn Up",
@@ -931,7 +962,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -949,7 +981,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-15": [
+      "2019-06-15": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -1026,7 +1058,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-16": [
+      "2019-06-16": [
         {
           time: "09:00",
           nume: "Aqua Fit",
@@ -1045,7 +1077,8 @@ export default class CalendarClass extends React.Component {
 
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -1084,7 +1117,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -1107,7 +1141,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-04-17": [
+      "2019-06-17": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -1189,10 +1223,11 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-04-18": [
+      "2019-06-18": [
         {
           time: "09:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "09:00",
@@ -1251,7 +1286,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -1269,7 +1305,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-19": [
+      "2019-06-19": [
         {
           time: "09:00",
           nume: "Pilates Power",
@@ -1346,7 +1382,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-04-20": [
+      "2019-06-20": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -1383,7 +1419,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-04-21": [
+      "2019-06-21": [
         {
           time: "10:00",
           nume: "Burn Up",
@@ -1391,7 +1427,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -1409,7 +1446,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-22": [
+      "2019-06-22": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -1486,7 +1523,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-23": [
+      "2019-06-23": [
         {
           time: "09:00",
           nume: "Aqua Fit",
@@ -1505,7 +1542,8 @@ export default class CalendarClass extends React.Component {
 
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -1544,7 +1582,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -1567,7 +1606,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-04-24": [
+      "2019-06-24": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -1649,10 +1688,11 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-04-25": [
+      "2019-06-25": [
         {
           time: "09:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "09:00",
@@ -1711,7 +1751,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -1729,7 +1770,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-26": [
+      "2019-06-26": [
         {
           time: "09:00",
           nume: "Pilates Power",
@@ -1806,7 +1847,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-04-27": [
+      "2019-06-27": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -1843,7 +1884,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-04-28": [
+      "2019-06-28": [
         {
           time: "10:00",
           nume: "Burn Up",
@@ -1851,7 +1892,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -1869,7 +1911,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-29": [
+      "2019-06-29": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -1946,7 +1988,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-04-30": [
+      "2019-06-30": [
         {
           time: "09:00",
           nume: "Aqua Fit",
@@ -1965,7 +2007,8 @@ export default class CalendarClass extends React.Component {
 
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -2004,7 +2047,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -2027,7 +2071,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-01": [
+      "2019-07-01": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -2109,10 +2153,11 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-02": [
+      "2019-07-02": [
         {
           time: "09:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "09:00",
@@ -2171,7 +2216,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -2189,7 +2235,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-03": [
+      "2019-07-03": [
         {
           time: "09:00",
           nume: "Pilates Power",
@@ -2266,7 +2312,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-05-04": [
+      "2019-07-04": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -2311,7 +2357,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -2329,7 +2376,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-06": [
+      "2019-07-06": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -2406,7 +2453,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-07": [
+      "2019-07-07": [
         {
           time: "09:00",
           nume: "Aqua Fit",
@@ -2425,7 +2472,8 @@ export default class CalendarClass extends React.Component {
 
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -2464,7 +2512,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -2487,7 +2536,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-08": [
+      "2019-07-08": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -2569,10 +2618,11 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-09": [
+      "2019-07-09": [
         {
           time: "09:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "09:00",
@@ -2631,7 +2681,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -2649,7 +2700,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-10": [
+      "2019-07-10": [
         {
           time: "09:00",
           nume: "Pilates Power",
@@ -2726,7 +2777,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-05-11": [
+      "2019-07-11": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -2763,7 +2814,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-05-12": [
+      "2019-07-12": [
         {
           time: "10:00",
           nume: "Burn Up",
@@ -2771,7 +2822,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -2789,7 +2841,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-13": [
+      "2019-07-13": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -2866,7 +2918,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-14": [
+      "2019-07-14": [
         {
           time: "09:00",
           nume: "Aqua Fit",
@@ -2885,7 +2937,8 @@ export default class CalendarClass extends React.Component {
 
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -2924,7 +2977,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -2947,7 +3001,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-15": [
+      "2019-07-15": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -3029,10 +3083,11 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-16": [
+      "2019-07-16": [
         {
           time: "09:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "09:00",
@@ -3091,7 +3146,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -3109,7 +3165,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-17": [
+      "2019-07-17": [
         {
           time: "09:00",
           nume: "Pilates Power",
@@ -3186,7 +3242,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-05-18": [
+      "2019-07-18": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -3223,7 +3279,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-05-19": [
+      "2019-07-19": [
         {
           time: "10:00",
           nume: "Burn Up",
@@ -3231,7 +3287,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -3249,7 +3306,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-20": [
+      "2019-07-20": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -3326,7 +3383,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-21": [
+      "2019-07-21": [
         {
           time: "09:00",
           nume: "Aqua Fit",
@@ -3345,7 +3402,8 @@ export default class CalendarClass extends React.Component {
 
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -3384,7 +3442,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -3407,7 +3466,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-22": [
+      "2019-07-22": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -3489,10 +3548,11 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-23": [
+      "2019-07-23": [
         {
           time: "09:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "09:00",
@@ -3551,7 +3611,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -3569,7 +3630,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-24": [
+      "2019-07-24": [
         {
           time: "09:00",
           nume: "Pilates Power",
@@ -3646,7 +3707,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-05-25": [
+      "2019-07-25": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -3683,7 +3744,7 @@ export default class CalendarClass extends React.Component {
           sala: "Zona Crossfit"
         }
       ],
-      "2019-05-26": [
+      "2019-07-26": [
         {
           time: "10:00",
           nume: "Burn Up",
@@ -3691,7 +3752,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -3709,7 +3771,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-27": [
+      "2019-07-27": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -3786,7 +3848,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-28": [
+      "2019-07-28": [
         {
           time: "09:00",
           nume: "Aqua Fit",
@@ -3805,7 +3867,8 @@ export default class CalendarClass extends React.Component {
 
         {
           time: "10:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "11:00",
@@ -3844,7 +3907,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -3867,7 +3931,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-29": [
+      "2019-07-29": [
         {
           time: "09:00",
           nume: "Aqua Pilates",
@@ -3949,10 +4013,11 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Intense"
         }
       ],
-      "2019-05-30": [
+      "2019-07-30": [
         {
           time: "09:00",
-          nume: "Spin Fit"
+          nume: "Spin Fit",
+          sala: "Sala Cycling"
         },
         {
           time: "09:00",
@@ -4011,7 +4076,8 @@ export default class CalendarClass extends React.Component {
         },
         {
           time: "19:00",
-          nume: "Cycling"
+          nume: "Cycling",
+          sala: "Sala Cycling"
         },
         {
           time: "19:00",
@@ -4029,7 +4095,7 @@ export default class CalendarClass extends React.Component {
           sala: "Sala Oasis"
         }
       ],
-      "2019-05-31": [
+      "2019-07-31": [
         {
           time: "09:00",
           nume: "Pilates Power",
@@ -4117,12 +4183,19 @@ export default class CalendarClass extends React.Component {
       this.setState({ fontLoaded: true });
     }
   };
+
   render() {
     return (
       <Agenda
         items={this.state.items}
         firstDay={1}
-        showWeekNumbers={true}
+        showWeekNumbers={false}
+        onDayPress={day => {
+          this.setState({ date: day.day + "/" + day.month + "/" + day.year });
+        }}
+        onDayChange={day => {
+          this.setState({ date: day.day + "/" + day.month + "/" + day.year });
+        }}
         loadItemsForMonth={this.loadItems.bind(this)}
         renderItem={this.renderItem.bind(this)}
         renderEmptyDate={this.renderEmptyDate.bind(this)}
@@ -4167,26 +4240,9 @@ export default class CalendarClass extends React.Component {
     // console.log(Load Items for ${day.year}-${day.month});
   }
 
-  setVisible() {
-    this.setState({ visible: true });
-  }
-
   renderItem(item) {
     return (
       <View style={{ margin: 10 }}>
-        <Dialog
-          visible={this.state.visible}
-          footer={
-            <DialogFooter>
-              <DialogButton text="CANCEL" onPress={() => {}} />
-              <DialogButton text="OK" onPress={() => {}} />
-            </DialogFooter>
-          }
-        >
-          <DialogContent>
-            <Text>hello</Text>
-          </DialogContent>
-        </Dialog>
         <View>
           <Text style={styles.timeBackgroundStyle}>{item.time}</Text>
         </View>
@@ -4212,26 +4268,64 @@ export default class CalendarClass extends React.Component {
           >
             {item.sala}
           </Text>
-          <View
-            style={{
-              borderBottomColor: "black",
-              borderBottomWidth: 1,
-              marginLeft: 7,
-              marginBottom: 7
-            }}
-          />
+        </View>
+        <View>
           <Button
             raised
             primary
             text="Înscrie-te"
-            onPress={() => {
-              this.setVisible();
-            }}
-          />{" "}
-          />
+            onPress={() => this.proceedToRegister(item)}
+          >
+            > Inscrie-te
+          </Button>
         </View>
       </View>
     );
+  }
+
+  proceedToRegister(item) {
+    let time = item.time.split(":");
+    if (
+      this.state.date <
+      new Date().getDate() +
+        "/" +
+        new Date().getMonth() +
+        "/" +
+        new Date().getFullYear()
+    ) {
+      Alert.alert(
+        "Eroare",
+        "Ne cerem scuze, dar mașina timpului încă nu a fost inventată :)",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: true }
+      );
+    } else if (
+      this.state.date ==
+        new Date().getDate() +
+          "/" +
+          new Date().getMonth() +
+          "/" +
+          new Date().getFullYear() &&
+      new Date().getHours() > time[0]
+    ) {
+      Alert.alert(
+        "Eroare",
+        "Acest antrenament deja a avut loc astăzi",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: true }
+      );
+    } else {
+      let object = {
+        hour: item.time,
+        training: item.nume,
+        sala: item.sala,
+        date: this.state.date
+      };
+      console.log(new Date().getHours());
+      console.log(time[0]);
+      AsyncStorage.setItem("registerObject", JSON.stringify(object));
+      this.props.navigation.navigate("Register");
+    }
   }
 
   renderEmptyDate() {

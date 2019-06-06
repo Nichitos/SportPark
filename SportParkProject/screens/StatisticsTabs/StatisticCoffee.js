@@ -8,6 +8,7 @@ import {
   FlatList
 } from "react-native";
 import { SQLite } from "expo";
+import { Button } from "react-native-material-ui";
 
 import { Card } from "react-native-elements";
 import { Font } from "expo";
@@ -87,7 +88,11 @@ export default class StatisticCoffee extends Component {
   render() {
     if (dataArray.length === 0) {
       return (
-        <View>
+        <View
+          style={{
+            marginBottom: 8
+          }}
+        >
           <Text
             style={{
               fontFamily: "open_sans_bold",
