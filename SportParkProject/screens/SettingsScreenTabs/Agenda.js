@@ -47,7 +47,7 @@ export default class CalendarClass extends React.Component {
     date:
       new Date().getDate() +
       "/" +
-      new Date().getMonth() +
+      (new Date().getMonth() + 1) +
       "/" +
       new Date().getFullYear(),
     items: {
@@ -4191,10 +4191,16 @@ export default class CalendarClass extends React.Component {
         firstDay={1}
         showWeekNumbers={false}
         onDayPress={day => {
-          this.setState({ date: day.day + "/" + day.month + "/" + day.year });
+          //console.log(day);
+          this.setState({
+            date: day.day + "/" + day.month + "/" + day.year
+          });
         }}
         onDayChange={day => {
-          this.setState({ date: day.day + "/" + day.month + "/" + day.year });
+          //console.log(day);
+          this.setState({
+            date: day.day + "/" + day.month + "/" + day.year
+          });
         }}
         loadItemsForMonth={this.loadItems.bind(this)}
         renderItem={this.renderItem.bind(this)}
@@ -4284,15 +4290,36 @@ export default class CalendarClass extends React.Component {
   }
 
   proceedToRegister(item) {
+    console.log("date from state: " + this.state.date);
+    console.log(
+      "current date: " +
+        new Date().getDate() +
+        "/" +
+        (new Date().getMonth() + 1) +
+        "/" +
+        new Date().getFullYear()
+    );
     let time = item.time.split(":");
+    let currentTime = new Date().getHours();
+    console.log("time " + time[0]);
+    console.log("currentTime " + currentTime);
     if (
       this.state.date <
       new Date().getDate() +
         "/" +
-        new Date().getMonth() +
+        (new Date().getMonth() + 1) +
         "/" +
         new Date().getFullYear()
     ) {
+      console.log("date from state: " + this.state.date);
+      console.log(
+        "current date: " +
+          new Date().getDate() +
+          "/" +
+          (new Date().getMonth() + 1) +
+          "/" +
+          new Date().getFullYear()
+      );
       Alert.alert(
         "Eroare",
         "Ne cerem scuze, dar mașina timpului încă nu a fost inventată :)",
@@ -4300,13 +4327,13 @@ export default class CalendarClass extends React.Component {
         { cancelable: true }
       );
     } else if (
-      this.state.date ==
+      this.state.date ===
         new Date().getDate() +
           "/" +
-          new Date().getMonth() +
+          (new Date().getMonth() + 1) +
           "/" +
           new Date().getFullYear() &&
-      new Date().getHours() > time[0]
+      currentTime > time[0]
     ) {
       Alert.alert(
         "Eroare",
@@ -4321,8 +4348,6 @@ export default class CalendarClass extends React.Component {
         sala: item.sala,
         date: this.state.date
       };
-      console.log(new Date().getHours());
-      console.log(time[0]);
       AsyncStorage.setItem("registerObject", JSON.stringify(object));
       this.props.navigation.navigate("Register");
     }

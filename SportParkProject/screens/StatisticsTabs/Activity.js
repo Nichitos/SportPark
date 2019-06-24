@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
-  Image
+  Image,
+  Platform
 } from "react-native";
 import { Pedometer, Permissions, Constants } from "expo";
 import { AsyncStorage } from "react-native";
@@ -18,7 +19,7 @@ import { SQLite } from "expo";
 
 const db = SQLite.openDatabase("SportParkDatabase");
 
-export default class Activity extends Component {
+export default class Activity extends React.Component {
   static navigationOptions = {
     header: null
   };
@@ -439,25 +440,11 @@ export default class Activity extends Component {
               </Text>
             ) : null}
           </Text>
-          <Text>
-            {this.state.fontLoaded ? (
-              <Text
-                style={{
-                  fontFamily: "open_sans_bold",
-                  fontSize: 30,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
-                {"\n"} din 9000 pași
-              </Text>
-            ) : null}
-          </Text>
         </Text>
       );
     };
     return (
-      <View backgroundColor="#ecf0f1">
+      <View style={styles.statusBar}>
         <ScrollView>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("Steps")}
@@ -758,6 +745,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignSelf: "flex-end",
     height: 40
+  },
+  statusBar: {
+    backgroundColor: "#ecf0f1",
+    marginTop: Platform.OS === "ios" ? Constants.statusBarHeight : 0
   }
 });
 

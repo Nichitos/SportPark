@@ -11,10 +11,12 @@ import {
   Linking
 } from "react-native";
 import { Card } from "react-native-elements";
-import { Font } from "expo";
+import { Font, Constants } from "expo";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 
 const SliderWidth = Dimensions.get("screen").width - 60;
+const SliderWidth2 = Dimensions.get("screen").width - 40;
+
 const ItemWidth = 225.0;
 const ItemWidth2 = 350.0;
 
@@ -697,7 +699,7 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View backgroundColor="#ecf0f1">
+      <View style={styles.statusBar}>
         <ScrollView>
           <Card>
             <View>
@@ -983,9 +985,9 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     flex: 1,
-    width: 35,
+    width: "100%",
     height: 290,
-    borderWidth: 100,
+    //borderWidth: Platform.OS === "ios" ? 0 : 100,
     resizeMode: "cover"
   },
   seeLocationButton: {
@@ -997,18 +999,18 @@ const styles = StyleSheet.create({
   },
   cardImage2: {
     flex: 1,
-    width: 350,
-
-    height: Platform.OS === "ios" ? 200 : 100,
-    borderWidth: 100,
+    width: "100%",
+    //aspectRatio: 1 / 0.5,
+    height: 200,
+    //borderWidth: Platform.OS === "ios" ? 0 : 100,
     resizeMode: "cover"
   },
   cardImage3: {
     flex: 1,
-    width: 350,
-    height: 227,
-    borderWidth: 100,
-    resizeMode: "cover"
+    width: SliderWidth,
+    height: 200,
+    //borderWidth: Platform.OS === "ios" ? 0 : 100,
+    resizeMode: "contain"
   },
 
   cardText3: {
@@ -1027,6 +1029,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.05)",
     borderRadius: 3,
     paddingHorizontal: 4
+  },
+  statusBar: {
+    backgroundColor: "#ecf0f1",
+    marginTop: Platform.OS === "ios" ? Constants.statusBarHeight : 0
   },
   getStartedText: {
     fontSize: 17,

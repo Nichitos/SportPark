@@ -14,9 +14,7 @@ let dataArray = [];
 export default class StatisticSteps extends Component {
   static navigationOptions = {
     title: "Pași",
-    headerTitleStyle: {
-      fontFamily: "century_gothic"
-    },
+
     headerStyle: {
       backgroundColor: "#B3191E",
       borderBottomWidth: 0,
@@ -96,12 +94,12 @@ export default class StatisticSteps extends Component {
           <Text
             style={{
               fontFamily: "open_sans_bold",
-              fontSize: 25,
-              margin: 20
+              alignSelf: "baseline",
+              fontSize: 20,
+              margin: 8
             }}
           >
-            {" "}
-            Nu aveți încă date înregistrate{" "}
+            Nu aveți încă date înregistrate
           </Text>
         </View>
       );

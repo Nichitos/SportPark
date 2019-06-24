@@ -10,7 +10,6 @@ const MenuNavigator = createStackNavigator({
   Home: { screen: Menu },
   Settings: { screen: Settings },
   Date: { screen: DatePersonale },
-
   Agenda: { screen: Agenda },
   Register: { screen: Register }
 });

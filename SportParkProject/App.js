@@ -133,7 +133,7 @@ export default class App extends React.Component {
     this.setState({ isLoadingComplete: true });
   };
   async _cacheResourcesAsync() {
-    const images = [
+    return Asset.loadAsync([
       require("./assets/images/robot-dev.png"),
       require("./assets/images/robot-prod.png"),
       require("./screens/img/icon_coffee.jpg"),
@@ -212,7 +212,7 @@ export default class App extends React.Component {
       require("./assets/images/training_24.jpg"),
       require("./assets/images/training_25.jpg"),
       require("./assets/images/training_26.jpg")
-    ];
+    ]);
 
     const cacheImages = images.map(image => {
       return Asset.fromModule(image).downloadAsync();

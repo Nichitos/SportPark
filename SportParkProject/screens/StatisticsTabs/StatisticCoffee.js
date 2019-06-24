@@ -96,8 +96,9 @@ export default class StatisticCoffee extends Component {
           <Text
             style={{
               fontFamily: "open_sans_bold",
-              fontSize: 25,
-              margin: 20
+              alignSelf: "baseline",
+              fontSize: 20,
+              margin: 8
             }}
           >
             {" "}

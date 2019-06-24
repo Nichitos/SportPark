@@ -4,9 +4,11 @@ import {
   AsyncStorage,
   Keyboard,
   TouchableWithoutFeedback,
-  Alert
+  Alert,
+  NetInfo
 } from "react-native";
 import { TextField } from "react-native-material-textfield";
+
 import { Font, Notifications } from "expo";
 import { Button } from "react-native-material-ui";
 import * as firebase from "firebase";
@@ -40,7 +42,9 @@ export default class Register extends Component {
     fontLoaded: false,
     registrationOrder: 1,
     phoneNumber: "",
-    date: ""
+    date: "",
+    type: "",
+    isConnected: false
   };
 
   async componentDidMount() {
@@ -58,8 +62,17 @@ export default class Register extends Component {
       firebase.initializeApp(firebaseConfig);
     }
 
+    NetInfo.isConnected.addEventListener(
+      "change",
+      this._handleConnectivityChange
+    );
+    NetInfo.isConnected.fetch().done(isConnected => {
+      this.setState({ isConnected });
+    });
+
     await Font.loadAsync({
       century_gothic: require("../img/CenturyGothic.ttf"),
+
       open_sans_bold: require("../img/OpenSans-Regular.ttf")
     });
     this.setState({ fontLoaded: true });
@@ -72,10 +85,15 @@ export default class Register extends Component {
     this.setState({ date: item.date });
     AsyncStorage.removeItem("registerObject");
 
-    this.onSubmit();
-
     console.log("hour" + this.state.hour);
     console.log("date" + this.state.date);
+  }
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener(
+      "change",
+      this._handleConnectivityChange
+    );
   }
 
   onSubmit() {
@@ -102,25 +120,35 @@ export default class Register extends Component {
     let date = this.state.date.split("/");
     let time = this.state.hour.split(":");
     neededTime.setDate(date[0]);
-    neededTime.setMonth(date[1]);
+    neededTime.setMonth(date[1] + 1);
     neededTime.setFullYear(date[2]);
     neededTime.setHours(time[0] - 2);
     neededTime.setMinutes(0);
 
-    console.log("neededTime" + neededTime);
+    console.log("neededTime " + neededTime);
     console.log("currentTime " + currentTime);
 
     let final = neededTime - currentTime;
 
-    const schedulingOptions = {
-      time: new Date().getTime() + Number(final)
-    };
+    console.log("final " + final);
 
-    Notifications.scheduleLocalNotificationAsync(
-      localNotification,
-      schedulingOptions
-    );
+    if (final > 7200000) {
+      const schedulingOptions = {
+        time: new Date().getTime() + Number(final)
+      };
+
+      Notifications.scheduleLocalNotificationAsync(
+        localNotification,
+        schedulingOptions
+      );
+    }
   }
+
+  _handleConnectivityChange = isConnected => {
+    this.setState({
+      isConnected
+    });
+  };
 
   writeUserData(nume, prenume, numarulDeTelefon, data, antrenament, ora, sala) {
     firebase
@@ -137,6 +165,7 @@ export default class Register extends Component {
       })
       .then(data => {
         console.log("data ", data);
+        this.onSubmit();
       })
       .catch(error => {
         //error callback
@@ -148,6 +177,15 @@ export default class Register extends Component {
     Alert.alert(
       "Eroare",
       "Introudceți toate datele.",
+      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+      { cancelable: true }
+    );
+  };
+
+  showInternetAlert = () => {
+    Alert.alert(
+      "Eroare",
+      "Se pare că dvs nu sunteți conectat la internet, îndată ce conexiunea va apărea, ve-ți fi automat înscris",
       [{ text: "OK", onPress: () => console.log("OK Pressed") }],
       { cancelable: true }
     );
@@ -169,6 +207,13 @@ export default class Register extends Component {
       this.state.phoneNumber === ""
     ) {
       this.showErrorAlert();
+    } else if (this.state.isConnected === false) {
+      this.showInternetAlert();
+      this.showSuccessAlert();
+      Keyboard.dismiss();
+      this.setState({ name: "" });
+      this.setState({ surname: "" });
+      this.setState({ phoneNumber: "" });
     } else {
       this.writeUserData(
         this.state.surname,
@@ -181,6 +226,9 @@ export default class Register extends Component {
       );
       this.showSuccessAlert();
       Keyboard.dismiss();
+      this.setState({ name: "" });
+      this.setState({ surname: "" });
+      this.setState({ phoneNumber: "" });
     }
   };
 
